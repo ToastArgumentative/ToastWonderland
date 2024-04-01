@@ -2,6 +2,8 @@
 
 ## Getting Started!
 
+Documentation: https://github.com/ToastArgumentative/ToastWonderland/wiki
+
 ### — Add the library to your project
 
 Repository: 
