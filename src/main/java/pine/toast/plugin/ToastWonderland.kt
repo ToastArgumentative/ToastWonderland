@@ -3,29 +3,32 @@ package pine.toast.plugin
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
+import org.bukkit.command.Command
+import org.bukkit.command.CommandSender
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemFlag
+import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 import pine.toast.library.Wonderland
 import pine.toast.library.events.items.ItemBlueprint
-import pine.toast.library.events.made.PlayerLeftClickEvent
-import pine.toast.library.events.made.PlayerRightClickEvent
 import java.util.*
 
 class ToastWonderland : JavaPlugin(), Listener {
 
+    private val plugin: Plugin = this
 
     override fun onEnable() {
         // Plugin startup logic
 
-        Wonderland.initialize(this)
-        server.pluginManager.registerEvents(this, this)
-
-
+        Wonderland.initialize(plugin)
+        server.pluginManager.registerEvents(this, plugin)
     }
+
+
+
 
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
@@ -65,6 +68,11 @@ class ToastWonderland : JavaPlugin(), Listener {
 
         player.inventory.setItem(0, item)
     }
+
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
+        return Wonderland.getCommandManager().executeCommand(sender, label, args)
+    }
+
 
     override fun onDisable() {
         // Plugin shutdown logic

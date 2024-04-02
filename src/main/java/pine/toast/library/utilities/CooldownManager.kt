@@ -39,7 +39,7 @@ object CooldownManager {
      * Returns whether the item is still on cooldown
      * @param item ItemStack The item to check
      */
-    fun checkCooldownItem(item: ItemStack): Boolean {
+    private fun checkCooldownItem(item: ItemStack): Boolean {
         val itemMeta = item.itemMeta
         val cooldownTime = itemMeta.persistentDataContainer.get(WonderlandKeys.COOLDOWN, PersistentDataType.LONG) ?: return false
 
@@ -66,7 +66,6 @@ object CooldownManager {
      * Updates the cooldown of an item
      * You can use a negative value to subtract the time, but if the cooldown goes negative
      * meaning the cooldown is over, you WILL HAVE TO RUN checkCooldownItem again.
-     * best practice is whenever you update always check
      * @param item ItemStack The item to update
      * @param time Int in seconds
      */
@@ -77,6 +76,7 @@ object CooldownManager {
         itemMeta.persistentDataContainer.set(WonderlandKeys.COOLDOWN, PersistentDataType.LONG, cooldownTime)
 
         item.itemMeta = itemMeta
+        checkCooldownItem(item)
     }
 
 }

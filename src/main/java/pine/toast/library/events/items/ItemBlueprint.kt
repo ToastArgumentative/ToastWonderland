@@ -39,8 +39,8 @@ data class ItemBlueprint(
         val item = ItemStack(material)
         val meta: ItemMeta? = item.itemMeta
 
-        itemName?.let { meta?.displayName(nameToComponent(itemName)) }
-        itemLore?.let { meta?.lore(itemLore.map { nameToComponent(it) }) }
+        itemName?.let { meta?.displayName(stringToComponent(itemName)) }
+        itemLore?.let { meta?.lore(itemLore.map { stringToComponent(it) }) }
 
         enchantments?.forEach() { meta?.addEnchant(it.key, it.value, true) }
         attributes?.forEach() { meta?.addAttributeModifier(it.value, it.key) }
@@ -56,8 +56,8 @@ data class ItemBlueprint(
         return item
     }
 
-    private fun nameToComponent(name: String): Component {
-        return Component.text(name)
+    private fun stringToComponent(string: String): Component {
+        return Component.text(string)
     }
 
 }

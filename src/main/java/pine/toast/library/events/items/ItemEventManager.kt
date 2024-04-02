@@ -10,7 +10,6 @@ import pine.toast.library.Wonderland
 import pine.toast.library.WonderlandKeys
 import pine.toast.library.events.made.PlayerLeftClickEvent
 import pine.toast.library.events.made.PlayerRightClickEvent
-import java.util.logging.Level
 
 object ItemEventManager : Listener {
 
@@ -24,10 +23,19 @@ object ItemEventManager : Listener {
         itemPDC.set(WonderlandKeys.ITEM_HANDLER, Wonderland.getAdapters().itemHandlerAdapter, handler )
     }
 
+    /**
+     * Returns the item handler if there is one
+     * @param item ItemStack The item to get the handler from
+     */
     private fun getItemHandler(item: ItemStack): ItemHandler? {
         return item.itemMeta.persistentDataContainer.get(WonderlandKeys.ITEM_HANDLER, Wonderland.getAdapters().itemHandlerAdapter)
     }
 
+
+    /**
+     * handles an item event
+     * @param item ItemStack The item to handle the event for
+     */
     private fun handleItemEvent(item: ItemStack, event: Event) {
         val handler = getItemHandler(item) ?: return
 
