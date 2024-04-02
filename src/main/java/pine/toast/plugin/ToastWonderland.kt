@@ -4,21 +4,34 @@ import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.inventory.EquipmentSlot
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemFlag
-import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.plugin.java.JavaPlugin
-import org.w3c.dom.Attr
-import pine.toast.library.ItemBlueprint
+import pine.toast.library.Wonderland
+import pine.toast.library.events.items.ItemBlueprint
+import pine.toast.library.events.made.PlayerLeftClickEvent
+import pine.toast.library.events.made.PlayerRightClickEvent
 import java.util.*
 
-class ToastWonderland : JavaPlugin() {
+class ToastWonderland : JavaPlugin(), Listener {
 
 
     override fun onEnable() {
         // Plugin startup logic
 
+        Wonderland.initialize(this)
+        server.pluginManager.registerEvents(this, this)
+
+
+    }
+
+    @EventHandler
+    fun onJoin(event: PlayerJoinEvent) {
+        val player = event.player
+
+        player.sendMessage("Welcome!")
 
         val attributes: MutableMap<AttributeModifier, Attribute> = mutableMapOf()
         val enchantments: MutableMap<Enchantment, Int> = mutableMapOf()
@@ -43,12 +56,14 @@ class ToastWonderland : JavaPlugin() {
             Material.DIAMOND_SWORD,
             enchantments,
             attributes,
-            flags
+            flags,
+            ToastsSwordHandler::class.java
         )
 
         // Builds the item and returns an item stack
         val item = blueprint.build()
 
+        player.inventory.setItem(0, item)
     }
 
     override fun onDisable() {

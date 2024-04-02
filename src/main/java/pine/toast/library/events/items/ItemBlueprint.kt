@@ -1,4 +1,4 @@
-package pine.toast.library
+package pine.toast.library.events.items
 
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta
  * @param enchantments MutableMap<Enchantment, Int> The enchantments of the item can be null
  * @param attributes MutableMap<AttributeModifier, Attribute> The attributes of the item can be null
  * @param flags Set<ItemFlag> The flags of the item can be null
+ * @param handler Class<out ItemHandler> The event handlers for the item, this can be null
  * Once the item blueprint is populated you can use ItemBlueprint.build() to build the item
  */
 data class ItemBlueprint(
@@ -26,7 +27,8 @@ data class ItemBlueprint(
     val material: Material,
     val enchantments: MutableMap<Enchantment, Int>?,
     val attributes: MutableMap<AttributeModifier, Attribute>?,
-    val flags: Set<ItemFlag>?
+    val flags: Set<ItemFlag>?,
+    val handler: Class<out ItemHandler>?
 
 ) {
 
@@ -44,11 +46,14 @@ data class ItemBlueprint(
         attributes?.forEach() { meta?.addAttributeModifier(it.value, it.key) }
         flags?.forEach() { meta?.addItemFlags(it) }
 
+        if (handler != null) {
+            val handlerInstance = handler.getConstructor().newInstance()
+            ItemEventManager.injectItemHandler(meta!!.persistentDataContainer, handlerInstance)
+        }
+
         meta?.let { item.itemMeta = it }
 
         return item
-
-
     }
 
     private fun nameToComponent(name: String): Component {

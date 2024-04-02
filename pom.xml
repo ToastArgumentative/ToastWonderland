@@ -6,7 +6,7 @@
 
   <groupId>pine.toast</groupId>
   <artifactId>ToastWonderland</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
 
   <name>ToastWonderland</name>
@@ -107,6 +107,8 @@
           <id>sonatype</id>
           <url>https://oss.sonatype.org/content/groups/public/</url>
       </repository>
+
+
   </repositories>
 
   <dependencies>
@@ -127,5 +129,6 @@
           <version>${kotlin.version}</version>
           <scope>test</scope>
       </dependency>
+
   </dependencies>
 </project>
