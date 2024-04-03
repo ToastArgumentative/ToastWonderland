@@ -2,7 +2,8 @@
 
 ## Getting Started!
 
-Documentation: https://github.com/ToastArgumentative/ToastWonderland/wiki
+Documentation: [Docs](https://github.com/ToastArgumentative/ToastWonderland/wiki) <br></br>
+FastBoard: Thanks to [MrMicky](https://github.com/MrMicky-FR/FastBoard)
 
 ### — Add the library to your project
 

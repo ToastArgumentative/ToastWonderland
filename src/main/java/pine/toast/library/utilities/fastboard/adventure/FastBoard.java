@@ -23,11 +23,12 @@
  */
 package pine.toast.library.utilities.fastboard.adventure;
 
-import fr.mrmicky.fastboard.FastBoardBase;
-import fr.mrmicky.fastboard.FastReflection;
+
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
+import pine.toast.library.utilities.fastboard.FastBoardBase;
+import pine.toast.library.utilities.fastboard.FastReflection;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;

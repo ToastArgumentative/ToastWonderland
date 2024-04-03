@@ -33,6 +33,7 @@ object ScoreboardManager : Listener {
         board?.delete()
         scoreboards.remove(player.uniqueId)
     }
+
     fun getScoreboards(): MutableMap<UUID, FastBoard> {
         return scoreboards
     }
