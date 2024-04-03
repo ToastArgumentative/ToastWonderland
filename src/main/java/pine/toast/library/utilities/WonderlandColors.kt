@@ -29,7 +29,7 @@ enum class WonderlandColors(val code: String) {
     companion object {
         @JvmStatic
         fun getByCode(code: String): WonderlandColors? {
-            for (color in values()) {
+            for (color in entries) {
                 if (color.code == "§$code") {
                     return color
                 }

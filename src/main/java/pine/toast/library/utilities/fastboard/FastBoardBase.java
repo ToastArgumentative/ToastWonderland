@@ -23,8 +23,8 @@
  */
 package pine.toast.library.utilities.fastboard;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import pine.toast.library.utilities.WonderlandColors;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -48,7 +48,7 @@ import java.util.stream.Stream;
 public abstract class FastBoardBase<T> {
 
     private static final Map<Class<?>, Field[]> PACKETS = new HashMap<>(8);
-    protected static final String[] COLOR_CODES = Arrays.stream(ChatColor.values())
+    protected static final String[] COLOR_CODES = Arrays.stream(WonderlandColors.getEntries().toArray())
             .map(Object::toString)
             .toArray(String[]::new);
     private static final VersionType VERSION_TYPE;
@@ -436,6 +436,7 @@ public abstract class FastBoardBase<T> {
             throw new RuntimeException("Unable to update scoreboard lines", t);
         }
     }
+
 
     /**
      * Update how a specified line's score is displayed on the scoreboard. A null value will reset the displayed
