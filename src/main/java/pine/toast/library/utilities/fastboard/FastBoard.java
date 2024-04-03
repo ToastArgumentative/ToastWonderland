@@ -23,8 +23,8 @@
  */
 package pine.toast.library.utilities.fastboard;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import pine.toast.library.utilities.WonderlandColors;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -99,25 +99,24 @@ public class FastBoard extends FastBoardBase<String> {
         String suffix = "";
 
         if (line == null || line.isEmpty()) {
-            prefix = COLOR_CODES[score] + ChatColor.RESET;
+            prefix = WonderlandColors.getColorByScore(score).getCode() + WonderlandColors.RESET;
         } else if (line.length() <= maxLength) {
             prefix = line;
         } else {
             // Prevent splitting color codes
-            int index = line.charAt(maxLength - 1) == ChatColor.COLOR_CHAR
-                    ? (maxLength - 1) : maxLength;
+            int index = line.charAt(maxLength - 1) == '§' ? (maxLength - 1) : maxLength;
             prefix = line.substring(0, index);
             String suffixTmp = line.substring(index);
-            ChatColor chatColor = null;
+            WonderlandColors chatColor = null;
 
-            if (suffixTmp.length() >= 2 && suffixTmp.charAt(0) == ChatColor.COLOR_CHAR) {
-                chatColor = ChatColor.getByChar(suffixTmp.charAt(1));
+            if (suffixTmp.length() >= 2 && suffixTmp.charAt(0) == '§') {
+                chatColor = WonderlandColors.getByCode(suffixTmp.substring(1, 2));
             }
 
-            String color = ChatColor.getLastColors(prefix);
-            boolean addColor = chatColor == null || chatColor.isFormat();
+            String color = WonderlandColors.getLastColors(prefix);
+            boolean addColor = chatColor == null || WonderlandColors.isFormat(chatColor);
 
-            suffix = (addColor ? (color.isEmpty() ? ChatColor.RESET.toString() : color) : "") + suffixTmp;
+            suffix = (addColor ? (color.isEmpty() ? WonderlandColors.RESET.toString() : color) : "") + suffixTmp;
         }
 
         if (prefix.length() > maxLength || suffix.length() > maxLength) {
