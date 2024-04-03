@@ -16,6 +16,8 @@ import org.bukkit.plugin.java.JavaPlugin
 import pine.toast.library.Wonderland
 import pine.toast.library.commands.CommandPlayer
 import pine.toast.library.events.items.ItemBlueprint
+import pine.toast.library.utilities.ScoreboardManager
+import pine.toast.library.utilities.ScreenManager
 import java.util.*
 
 class ToastWonderland : JavaPlugin(), Listener {
@@ -32,8 +34,8 @@ class ToastWonderland : JavaPlugin(), Listener {
 
     @CommandPlayer(cooldown = 5)
     fun test(sender: Player, args: Array<String>) {
+        ScreenManager.sendScreenMessage(sender, args[0], null)
 
-        sender.sendMessage("Hello World!")
     }
 
 
@@ -74,6 +76,16 @@ class ToastWonderland : JavaPlugin(), Listener {
         val item = blueprint.build()
 
         player.inventory.setItem(0, item)
+
+        val lines: MutableList<String> = mutableListOf()
+        lines.add("Hello world!")
+        lines.add("Hello world!")
+        lines.add("") // Spacer
+        lines.add("Hello world!")
+        lines.add("Hello world!")
+        val board = ScoreboardManager.createNewScoreboard(event.player, "Test", lines)
+
+
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {

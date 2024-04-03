@@ -1,0 +1,35 @@
+
+/src/main/java/pine/toast/plugin/
+
+# IntelliJ IDEA files
+.idea/
+
+# Eclipse files
+.classpath
+.project
+.settings/
+
+# Gradle files
+.gradle/
+build/
+
+# Maven files
+target/
+
+# Mac OS files
+.DS_Store
+
+# XML files
+*.xml
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+
+# IDE backup files
+*~
+
+# Java bytecode files
+*.class

@@ -47,7 +47,7 @@ class CommandManager {
         val isPlayerCommand = method.isAnnotationPresent(CommandPlayer::class.java)
         val isAllCommand = method.isAnnotationPresent(CommandAll::class.java)
 
-        // If the command is marked as console-only and the sender is not the console, return false
+        // If the command is marked as console-only and the sender is not the console, return true to hide command usage print
         if (isConsoleCommand && sender !is ConsoleCommandSender) {
             sender.sendMessage(WonderlandColors.RED + "This command is only available in the console.")
             Wonderland.getPlugin().logger.log(
