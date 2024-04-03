@@ -6,6 +6,7 @@ import org.bukkit.attribute.AttributeModifier
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
@@ -13,6 +14,7 @@ import org.bukkit.inventory.ItemFlag
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 import pine.toast.library.Wonderland
+import pine.toast.library.commands.CommandPlayer
 import pine.toast.library.events.items.ItemBlueprint
 import java.util.*
 
@@ -24,10 +26,15 @@ class ToastWonderland : JavaPlugin(), Listener {
         // Plugin startup logic
 
         Wonderland.initialize(plugin)
+        Wonderland.getCommandManager().registerCommands()
         server.pluginManager.registerEvents(this, plugin)
     }
 
+    @CommandPlayer(cooldown = 5)
+    fun test(sender: Player, args: Array<String>) {
 
+        sender.sendMessage("Hello World!")
+    }
 
 
     @EventHandler

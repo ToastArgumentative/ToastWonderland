@@ -1,11 +1,67 @@
 package pine.toast.library.utilities
 
+import org.bukkit.NamespacedKey
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import pine.toast.library.WonderlandKeys
 
 object CooldownManager {
 
+    /**
+     * Applies a cooldown to the player in seconds.
+     * @param player Player The player to apply the cooldown to
+     * @param key String The namespace key for the cooldown
+     * @param time Int in seconds
+     */
+    fun applyPlayerCooldown(player: Player, key: NamespacedKey, time: Int) {
+        val cooldownTime = System.currentTimeMillis() + (time * 1000).toLong()
+
+        player.persistentDataContainer.set(key, PersistentDataType.LONG, cooldownTime)
+    }
+
+    /**
+     * Returns true if the player is on cooldown for the specified key.
+     * @param player Player The player to check
+     * @param key String The namespace key for the cooldown
+     */
+    fun isPlayerOnCooldown(player: Player, key: NamespacedKey): Boolean {
+        checkPlayerCooldown(player, key)
+        val cooldownTime = player.persistentDataContainer.get(key, PersistentDataType.LONG)
+        return cooldownTime != null && cooldownTime > System.currentTimeMillis()
+    }
+
+    /**
+     * Returns the remaining cooldown time for the player in milliseconds.
+     * @param player Player The player to check
+     * @param key String The namespace key for the cooldown
+     */
+    fun getPlayerRemainingCooldown(player: Player, key: NamespacedKey): Long {
+        checkPlayerCooldown(player, key)
+        val cooldownTime = player.persistentDataContainer.get(key, PersistentDataType.LONG) ?: return 0
+        return cooldownTime - System.currentTimeMillis()
+    }
+
+    /**
+     * Removes the cooldown for the specified key from the player.
+     * @param player Player The player to remove cooldown from
+     * @param key String The namespace key for the cooldown
+     */
+    fun removePlayerCooldown(player: Player, key: NamespacedKey) {
+        player.persistentDataContainer.remove(key)
+    }
+
+    /**
+     * Checks the cooldown status and if its invalid it will remove it
+     * @param player Player The player to check and update cooldown for
+     * @param key NamespacedKey The namespace key for the cooldown
+     */
+    private fun checkPlayerCooldown(player: Player, key: NamespacedKey) {
+        val cooldownTime = player.persistentDataContainer.get(key, PersistentDataType.LONG)
+        if (cooldownTime != null && cooldownTime <= System.currentTimeMillis()) {
+            removePlayerCooldown(player, key)
+        }
+    }
 
     /**
      * Applies a cooldown to the item in seconds.
@@ -30,8 +86,8 @@ object CooldownManager {
      * @param item ItemStack The item to check
      */
     fun isOnCooldownItem(item: ItemStack): Boolean {
-        val itemPDC = item.itemMeta.persistentDataContainer
         checkCooldownItem(item)
+        val itemPDC = item.itemMeta.persistentDataContainer
         return itemPDC.has(WonderlandKeys.COOLDOWN, PersistentDataType.LONG)
     }
 
@@ -57,6 +113,7 @@ object CooldownManager {
      * @param item ItemStack The item to check
      */
     fun getCooldownTimeItem(item: ItemStack): Long {
+        checkCooldownItem(item)
         val itemMeta = item.itemMeta
         return itemMeta.persistentDataContainer.get(WonderlandKeys.COOLDOWN, PersistentDataType.LONG) ?: 0
 

@@ -1,9 +1,11 @@
 package pine.toast.library.commands
 
+import org.bukkit.NamespacedKey
 import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
 import pine.toast.library.Wonderland
+import pine.toast.library.utilities.CooldownManager
 import pine.toast.library.utilities.WonderlandColors
 import java.lang.reflect.Method
 import java.util.*
@@ -48,7 +50,10 @@ class CommandManager {
         // If the command is marked as console-only and the sender is not the console, return false
         if (isConsoleCommand && sender !is ConsoleCommandSender) {
             sender.sendMessage(WonderlandColors.RED + "This command is only available in the console.")
-            Wonderland.getPlugin().logger.log(Level.WARNING, "${sender.name} has tried to execute $label but does not have permission to do so.")
+            Wonderland.getPlugin().logger.log(
+                Level.WARNING,
+                "${sender.name} has tried to execute $label but does not have permission to do so."
+            )
             return true
         }
 
@@ -63,15 +68,67 @@ class CommandManager {
             val annotation = method.getAnnotation(CommandAll::class.java) ?: return false
             val permission = annotation.permission
             val allOperators = annotation.allOperators
+            val cooldownSeconds = annotation.cooldown
 
             if (permission.isNotEmpty() && !sender.hasPermission(permission)) {
-                Wonderland.getPlugin().logger.log(Level.SEVERE, "${sender.name} has tried to execute $label but does not have permission to do so.")
+                Wonderland.getPlugin().logger.log(
+                    Level.SEVERE,
+                    "${sender.name} has tried to execute $label but does not have permission to do so."
+                )
                 return true
             }
 
             if (allOperators && !sender.isOp) {
-                Wonderland.getPlugin().logger.log(Level.SEVERE, "${sender.name} has tried to execute $label but does not have permission to do so.")
+                Wonderland.getPlugin().logger.log(
+                    Level.SEVERE,
+                    "${sender.name} has tried to execute $label but does not have permission to do so."
+                )
                 return true
+            }
+
+            if (cooldownSeconds > 0 && sender is Player) {
+                val cooldownKey = NamespacedKey(Wonderland.getPlugin(), label)
+                if (CooldownManager.isPlayerOnCooldown(sender, cooldownKey)) {
+                    val remainingCooldown = CooldownManager.getPlayerRemainingCooldown(sender, cooldownKey)
+                    sender.sendMessage(WonderlandColors.RED + "You are still on cooldown for this command. Time remaining: ${remainingCooldown / 1000} seconds")
+                    return true
+                } else {
+                    CooldownManager.applyPlayerCooldown(sender, cooldownKey, cooldownSeconds)
+                }
+            }
+        }
+
+        if (isPlayerCommand && sender is Player) {
+            val annotation = method.getAnnotation(CommandPlayer::class.java)
+            val permission = annotation.permission
+            val allOperators = annotation.allOperators
+            val cooldownSeconds = annotation.cooldown
+
+            if (permission.isNotEmpty() && !sender.hasPermission(permission)) {
+                Wonderland.getPlugin().logger.log(
+                    Level.SEVERE,
+                    "${sender.name} has tried to execute $label but does not have permission to do so."
+                )
+                return true
+            }
+
+            if (allOperators && !sender.isOp) {
+                Wonderland.getPlugin().logger.log(
+                    Level.SEVERE,
+                    "${sender.name} has tried to execute $label but does not have permission to do so."
+                )
+                return true
+            }
+
+            if (cooldownSeconds > 0) {
+                val cooldownKey = NamespacedKey(Wonderland.getPlugin(), label)
+                if (CooldownManager.isPlayerOnCooldown(sender, cooldownKey)) {
+                    val remainingCooldown = CooldownManager.getPlayerRemainingCooldown(sender, cooldownKey)
+                    sender.sendMessage(WonderlandColors.RED + "You are still on cooldown for this command. Time remaining: ${remainingCooldown / 1000} seconds")
+                    return true
+                } else {
+                    CooldownManager.applyPlayerCooldown(sender, cooldownKey, cooldownSeconds)
+                }
             }
         }
 
@@ -84,10 +141,6 @@ class CommandManager {
 
         return true
     }
-
-
-
-
 
 
 }

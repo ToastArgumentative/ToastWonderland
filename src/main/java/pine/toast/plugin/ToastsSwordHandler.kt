@@ -2,7 +2,6 @@ package pine.toast.plugin
 
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import pine.toast.library.Wonderland
 import pine.toast.library.events.items.ItemHandler
 import pine.toast.library.events.made.PlayerLeftClickEvent
 import pine.toast.library.events.made.PlayerRightClickEvent
