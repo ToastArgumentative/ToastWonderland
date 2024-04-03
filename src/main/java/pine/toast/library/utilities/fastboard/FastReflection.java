@@ -37,6 +37,7 @@ import java.util.function.Predicate;
  *
  * @author MrMicky
  */
+@SuppressWarnings("unused")
 public final class FastReflection {
 
     private static final String NM_PACKAGE = "net.minecraft";

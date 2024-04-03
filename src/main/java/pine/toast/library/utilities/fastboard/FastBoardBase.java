@@ -45,6 +45,7 @@ import java.util.stream.Stream;
  * @author MrMicky
  * @version 2.1.0
  */
+@SuppressWarnings("unused")
 public abstract class FastBoardBase<T> {
 
     private static final Map<Class<?>, Field[]> PACKETS = new HashMap<>(8);
