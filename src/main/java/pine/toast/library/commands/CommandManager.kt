@@ -33,10 +33,9 @@ class CommandManager {
             commands[commandName] = method
         }
 
-        println("Registered ${commands.size} commands.")
+        Wonderland.getPlugin().logger.log(Level.INFO, "Registered ${commands.size} commands.")
 
     }
-
 
 
 

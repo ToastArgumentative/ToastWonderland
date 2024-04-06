@@ -11,15 +11,19 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemFlag
+import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 import pine.toast.library.Wonderland
 import pine.toast.library.commands.CommandPlayer
 import pine.toast.library.events.items.ItemBlueprint
+import pine.toast.library.utilities.RecipeManager
+import pine.toast.library.utilities.RecipeShape
 import pine.toast.library.utilities.ScoreboardManager
 import pine.toast.library.utilities.ScreenManager
 import java.util.*
 
+@Suppress("unused")
 class ToastWonderland : JavaPlugin(), Listener {
 
     private val plugin: Plugin = this
@@ -30,9 +34,11 @@ class ToastWonderland : JavaPlugin(), Listener {
         Wonderland.initialize(plugin)
         Wonderland.getCommandManager().registerCommands()
         server.pluginManager.registerEvents(this, plugin)
+
+        easyDiamondRecipe()
     }
 
-    @CommandPlayer(cooldown = 5)
+    @CommandPlayer(cooldown = 5, permission = "wonderland.no")
     fun test(sender: Player, args: Array<String>) {
         ScreenManager.sendScreenMessage(sender, args[0], null)
 
@@ -83,7 +89,30 @@ class ToastWonderland : JavaPlugin(), Listener {
         lines.add("") // Spacer
         lines.add("Hello world!")
         lines.add("Hello world!")
-        val board = ScoreboardManager.createNewScoreboard(event.player, "Test", lines)
+        ScoreboardManager.createNewScoreboard(event.player, "Test", lines)
+
+    }
+
+
+    fun easyDiamondRecipe() {
+
+        val recipeShape = RecipeShape(
+            Material.DIRT,
+            Material.DIRT,
+            null,
+            Material.DIRT,
+            Material.DIRT,
+            null,
+            Material.DIRT,
+            Material.DIRT,
+            null,
+
+        )
+
+        val result = ItemStack(Material.DIAMOND)
+        val easydiamond = RecipeManager.createRecipe(recipeShape, result)
+        val recipe = easydiamond.first
+        val key = easydiamond.second
 
 
     }
