@@ -1,5 +1,4 @@
 
-/src/main/java/pine/toast/plugin/
 
 # IntelliJ IDEA files
 .idea/
@@ -33,3 +32,4 @@ target/
 
 # Java bytecode files
 *.class
+/src/main/java/pine/toast/plugin/
