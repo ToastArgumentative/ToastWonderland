@@ -16,6 +16,7 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 import pine.toast.library.Wonderland
 import pine.toast.library.commands.CommandPlayer
+import pine.toast.library.enchants.EnchantmentManager
 import pine.toast.library.events.items.ItemBlueprint
 import pine.toast.library.utilities.RecipeManager
 import pine.toast.library.utilities.RecipeShape
@@ -33,6 +34,8 @@ class ToastWonderland : JavaPlugin(), Listener {
 
         Wonderland.initialize(plugin)
         Wonderland.getCommandManager().registerCommands()
+        EnchantmentManager.registerEnchantment(SuperJump())
+        EnchantmentManager.registerEnchantment(Healthy())
         server.pluginManager.registerEvents(this, plugin)
 
         easyDiamondRecipe()
@@ -56,14 +59,15 @@ class ToastWonderland : JavaPlugin(), Listener {
         val flags: MutableSet<ItemFlag> = mutableSetOf()
         val lore: MutableList<String> = mutableListOf()
 
-        val attackDamageAttr = AttributeModifier(UUID.randomUUID(), "Attack Damage", 2.0, AttributeModifier.Operation.ADD_NUMBER)
+        val attackDamageAttr = AttributeModifier(UUID.randomUUID(), "Attack Damage", 25.0, AttributeModifier.Operation.ADD_NUMBER)
         attributes[attackDamageAttr] = Attribute.GENERIC_ATTACK_DAMAGE
 
-        enchantments[Enchantment.DAMAGE_ALL] = 4
+        enchantments[Enchantment.DAMAGE_ALL] = 30
         enchantments[Enchantment.KNOCKBACK] = 2
 
         flags.add(ItemFlag.HIDE_ENCHANTS)
         flags.add(ItemFlag.HIDE_UNBREAKABLE)
+        flags.add(ItemFlag.HIDE_ATTRIBUTES)
 
         lore.add("I am the wonder of the world!")
         lore.add("I am the wonder of the world!")
@@ -91,6 +95,13 @@ class ToastWonderland : JavaPlugin(), Listener {
         lines.add("Hello world!")
         ScoreboardManager.createNewScoreboard(event.player, "Test", lines)
 
+
+        val superJumpBook = EnchantmentManager.createEnchantBook("Super Jump")
+        val healthyJumpBook = EnchantmentManager.createEnchantBook("Healthy")
+
+        player.inventory.setItem(2, superJumpBook)
+        player.inventory.setItem(3, healthyJumpBook)
+
     }
 
 
@@ -108,12 +119,8 @@ class ToastWonderland : JavaPlugin(), Listener {
             null,
 
         )
-
         val result = ItemStack(Material.DIAMOND)
         val easydiamond = RecipeManager.createRecipe(recipeShape, result)
-        val recipe = easydiamond.first
-        val key = easydiamond.second
-
 
     }
 
