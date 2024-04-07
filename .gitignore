@@ -33,3 +33,4 @@ target/
 # Java bytecode files
 *.class
 /src/main/java/pine/toast/plugin/
+/src/main/resources/
