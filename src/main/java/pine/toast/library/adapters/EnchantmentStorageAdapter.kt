@@ -17,6 +17,14 @@ class EnchantmentStorageAdapter : PersistentDataType<ByteArray, EnchantmentStora
         return EnchantmentStorage::class.java
     }
 
+    override fun fromPrimitive(bytes: ByteArray, context: PersistentDataAdapterContext): EnchantmentStorage {
+        ByteArrayInputStream(bytes).use { byteArrayInputStream ->
+            ObjectInputStream(byteArrayInputStream).use { objectInputStream ->
+                return objectInputStream.readObject() as EnchantmentStorage
+            }
+        }
+    }
+
     override fun toPrimitive(storage: EnchantmentStorage, context: PersistentDataAdapterContext): ByteArray {
         ByteArrayOutputStream().use { byteArrayOutputStream ->
             ObjectOutputStream(byteArrayOutputStream).use { objectOutputStream ->
@@ -26,13 +34,7 @@ class EnchantmentStorageAdapter : PersistentDataType<ByteArray, EnchantmentStora
         }
     }
 
-    override fun fromPrimitive(bytes: ByteArray, context: PersistentDataAdapterContext): EnchantmentStorage {
-        ByteArrayInputStream(bytes).use { byteArrayInputStream ->
-            ObjectInputStream(byteArrayInputStream).use { objectInputStream ->
-                return objectInputStream.readObject() as EnchantmentStorage
-            }
-        }
-    }
+
 
 
 }

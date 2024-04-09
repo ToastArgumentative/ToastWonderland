@@ -4,6 +4,7 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.Recipe
+import org.bukkit.inventory.RecipeChoice
 import org.bukkit.inventory.ShapedRecipe
 import pine.toast.library.Wonderland
 import java.util.*
@@ -39,8 +40,8 @@ object RecipeManager {
         return recipes.filter { it.value.toString() == keyString }.map { it.key }.firstOrNull()
     }
 
-    fun createRecipe(recipeShape: RecipeShape, result: ItemStack, keyValue: UUID = UUID.randomUUID()): Pair<ShapedRecipe, NamespacedKey> {
-        val key = NamespacedKey(Wonderland.getPlugin(), keyValue.toString())
+    fun createRecipe(recipeShape: RecipeShape, result: ItemStack, keyValue: String = UUID.randomUUID().toString()): Pair<ShapedRecipe, NamespacedKey> {
+        val key = NamespacedKey(Wonderland.getPlugin(), keyValue)
         val shapedRecipe = ShapedRecipe(key, result)
         val charSlots = recipeShape.assignSlotToChar()
 
@@ -50,57 +51,56 @@ object RecipeManager {
             "GHI"
         )
 
-        shapedRecipe.setIngredient('A', charSlots['A'] ?: Material.AIR)
-        shapedRecipe.setIngredient('B', charSlots['B'] ?: Material.AIR)
-        shapedRecipe.setIngredient('C', charSlots['C'] ?: Material.AIR)
-        shapedRecipe.setIngredient('D', charSlots['D'] ?: Material.AIR)
-        shapedRecipe.setIngredient('E', charSlots['E'] ?: Material.AIR)
-        shapedRecipe.setIngredient('F', charSlots['F'] ?: Material.AIR)
-        shapedRecipe.setIngredient('G', charSlots['G'] ?: Material.AIR)
-        shapedRecipe.setIngredient('H', charSlots['H'] ?: Material.AIR)
-        shapedRecipe.setIngredient('I', charSlots['I'] ?: Material.AIR)
+        shapedRecipe.setIngredient('A', RecipeChoice.ExactChoice(charSlots['A'] ?: ItemStack(Material.AIR)))
+        shapedRecipe.setIngredient('B', RecipeChoice.ExactChoice(charSlots['B'] ?: ItemStack(Material.AIR)))
+        shapedRecipe.setIngredient('C', RecipeChoice.ExactChoice(charSlots['C'] ?: ItemStack(Material.AIR)))
+        shapedRecipe.setIngredient('D', RecipeChoice.ExactChoice(charSlots['D'] ?: ItemStack(Material.AIR)))
+        shapedRecipe.setIngredient('E', RecipeChoice.ExactChoice(charSlots['E'] ?: ItemStack(Material.AIR)))
+        shapedRecipe.setIngredient('F', RecipeChoice.ExactChoice(charSlots['F'] ?: ItemStack(Material.AIR)))
+        shapedRecipe.setIngredient('G', RecipeChoice.ExactChoice(charSlots['G'] ?: ItemStack(Material.AIR)))
+        shapedRecipe.setIngredient('H', RecipeChoice.ExactChoice(charSlots['H'] ?: ItemStack(Material.AIR)))
+        shapedRecipe.setIngredient('I', RecipeChoice.ExactChoice(charSlots['I'] ?: ItemStack(Material.AIR)))
+
 
         recipes[shapedRecipe] = key
         Wonderland.getPlugin().server.addRecipe(shapedRecipe)
         return Pair(shapedRecipe, key)
-
     }
+
 
 }
 
 data class RecipeShape(
-    val slot1: Material?,
-    val slot2: Material?,
-    val slot3: Material?,
+    val slot1: ItemStack?,
+    val slot2: ItemStack?,
+    val slot3: ItemStack?,
 
-    val slot4: Material?,
-    val slot5: Material?,
-    val slot6: Material?,
+    val slot4: ItemStack?,
+    val slot5: ItemStack?,
+    val slot6: ItemStack?,
 
-    val slot7: Material?,
-    val slot8: Material?,
-    val slot9: Material?,
+    val slot7: ItemStack?,
+    val slot8: ItemStack?,
+    val slot9: ItemStack?
+) {
 
-    ) {
+    fun assignSlotToChar(): Map<Char, ItemStack?> {
 
-    fun assignSlotToChar(): Map<Char, Material?> {
+        val charItemStackMap: MutableMap<Char, ItemStack?> = mutableMapOf()
 
-        val chatMaterialMap: MutableMap<Char, Material?> = mutableMapOf()
+        charItemStackMap['A'] = slot1
+        charItemStackMap['B'] = slot2
+        charItemStackMap['C'] = slot3
 
-        chatMaterialMap['A'] = slot1
-        chatMaterialMap['B'] = slot2
-        chatMaterialMap['C'] = slot3
+        charItemStackMap['D'] = slot4
+        charItemStackMap['E'] = slot5
+        charItemStackMap['F'] = slot6
 
-        chatMaterialMap['D'] = slot4
-        chatMaterialMap['E'] = slot5
-        chatMaterialMap['F'] = slot6
+        charItemStackMap['G'] = slot7
+        charItemStackMap['H'] = slot8
+        charItemStackMap['I'] = slot9
 
-        chatMaterialMap['G'] = slot7
-        chatMaterialMap['H'] = slot8
-        chatMaterialMap['I'] = slot9
-
-        return chatMaterialMap
-
+        return charItemStackMap
     }
-
 }
+

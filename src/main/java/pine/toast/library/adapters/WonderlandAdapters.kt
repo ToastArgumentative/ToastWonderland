@@ -4,5 +4,4 @@ class WonderlandAdapters {
     val itemHandlerAdapter = ItemHandlerAdapter()
     val enchantmentStorageAdapter = EnchantmentStorageAdapter()
 
-
 }

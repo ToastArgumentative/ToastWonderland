@@ -1,6 +1,5 @@
 package pine.toast.library.commands
 
-
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 annotation class CommandConsole

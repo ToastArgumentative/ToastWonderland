@@ -22,7 +22,7 @@ import pine.toast.library.utilities.WonderlandColors
 import java.util.logging.Level
 
 
-@Suppress("unused")
+@Suppress("unused", "NAME_SHADOWING")
 object EnchantmentManager : Listener {
 
     private val allEnchantments: MutableMap<String, WLEnchant> = mutableMapOf()
@@ -30,9 +30,6 @@ object EnchantmentManager : Listener {
     fun registerEnchantment(enchant: WLEnchant) {
         allEnchantments[enchant.name.replace(" ", ".")] = enchant
     }
-
-
-
 
 
     fun createEnchantBook(enchantName: String): ItemStack {
@@ -45,6 +42,7 @@ object EnchantmentManager : Listener {
 
         bookMeta.persistentDataContainer.set(WonderlandKeys.ENCHANTMENT_STORAGE, PersistentDataType.STRING, enchantName)
         bookMeta.persistentDataContainer.set(WonderlandKeys.ENCHANT_LEVEL, PersistentDataType.INTEGER, enchantment.level)
+        bookMeta.persistentDataContainer.set(WonderlandKeys.ENCHANTMENT_BOOK, PersistentDataType.BOOLEAN, true)
 
         val lore = mutableListOf<Component>()
 
@@ -92,10 +90,10 @@ object EnchantmentManager : Listener {
         for (i in roman.indices) {
             val currentValue = romanNumerals[roman[i]] ?: 0
 
-            if (currentValue > prevValue) {
-                result += currentValue - 2 * prevValue
+            result += if (currentValue > prevValue) {
+                currentValue - 2 * prevValue
             } else {
-                result += currentValue
+                currentValue
             }
 
             prevValue = currentValue
@@ -105,11 +103,18 @@ object EnchantmentManager : Listener {
     }
 
 
+    private fun bookCheck(book: ItemStack): Boolean {
+        val bookMeta = book.itemMeta ?: return false
+        val storage = bookMeta.persistentDataContainer
+        return storage.has(WonderlandKeys.ENCHANTMENT_BOOK)
+    }
+
+
     /**
      * Returns the enchantment storage if there is one
      */
     private fun checkMainHandEnchantmentStorage(player: Player): EnchantmentStorage? {
-
+        if (bookCheck(player.inventory.itemInMainHand)) return null
         val mainHand = player.inventory.itemInMainHand
         if (mainHand.type == Material.AIR) return null
         val mainMeta = mainHand.itemMeta
@@ -122,7 +127,7 @@ object EnchantmentManager : Listener {
     }
 
     private fun checkOffHandEnchantmentStorage(player: Player): EnchantmentStorage? {
-
+        if (bookCheck(player.inventory.itemInOffHand)) return null
         val offHand = player.inventory.itemInOffHand
         if (offHand.type == Material.AIR) return null
         val offMeta = offHand.itemMeta
@@ -185,6 +190,7 @@ object EnchantmentManager : Listener {
     private fun checkEquipmentEnchantmentStorage(player: Player): List<EnchantmentStorage>? {
 
         val mainHand = player.inventory.itemInMainHand
+        if (bookCheck(mainHand)) return null
         val offHand = player.inventory.itemInOffHand
         val feet = player.inventory.boots
         val pants = player.inventory.leggings
@@ -227,8 +233,9 @@ object EnchantmentManager : Listener {
         if (book.type != Material.ENCHANTED_BOOK) return
 
         val item = event.currentItem ?: return  // Return if there's no item to enchant.
+        if (item.type == Material.AIR) return   // Return if the item slot is empty.
 
-        val bookMeta = book.itemMeta ?: return  // Return if the book has no meta data.
+        val bookMeta = book.itemMeta ?: return
         val bookStorage = bookMeta.persistentDataContainer
         val enchantName = bookStorage.get(WonderlandKeys.ENCHANTMENT_STORAGE, PersistentDataType.STRING) ?: return  // Return if there's no enchantment name stored.
 
@@ -297,7 +304,7 @@ object EnchantmentManager : Listener {
         val enchants: MutableMap<String, Int> = mutableMapOf()
         enchantsCollection.forEach { enchants.putAll(it) }
 
-        enchants.forEach() {
+        enchants.forEach {
             if (!allEnchantments.containsKey(it.key)) return@forEach
             allEnchantments[it.key]!!.onItemConsume(player, it.value, event.item)
         }
@@ -312,7 +319,7 @@ object EnchantmentManager : Listener {
         val enchants: MutableMap<String, Int> = mutableMapOf()
         enchantsCollection.forEach { enchants.putAll(it) }
 
-        enchants.forEach() {
+        enchants.forEach {
             if (!allEnchantments.containsKey(it.key)) return@forEach
             allEnchantments[it.key]!!.onPlayerMove(player, it.value)
         }
@@ -327,7 +334,7 @@ object EnchantmentManager : Listener {
         val enchants: MutableMap<String, Int> = mutableMapOf()
         enchantsCollection.forEach { enchants.putAll(it) }
 
-        enchants.forEach() {
+        enchants.forEach {
             if (!allEnchantments.containsKey(it.key)) return@forEach
             allEnchantments[it.key]!!.onItemDrop(player, it.value, event.itemDrop.itemStack)
         }

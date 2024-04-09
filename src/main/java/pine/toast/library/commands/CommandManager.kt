@@ -7,40 +7,51 @@ import org.bukkit.entity.Player
 import pine.toast.library.Wonderland
 import pine.toast.library.utilities.CooldownManager
 import pine.toast.library.utilities.WonderlandColors
+import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.util.*
 import java.util.logging.Level
 
 class CommandManager {
 
-    private val commands: MutableMap<String, Method> = mutableMapOf()
+    private val commands: MutableMap<String, Pair<Method, Any>> = mutableMapOf()
 
-    fun registerCommands() {
-        val methods = Wonderland.getPlugin().javaClass.declaredMethods
+
+    fun registerCommands(vararg instances: Any) {
+        // Clear previous commands
+        commands.clear()
+
+        // Iterate over each provided instance to register commands
+        instances.forEach { instance ->
+            registerCommandsFromInstance(instance)
+        }
+        // Optionally, include the main plugin instance if it also contains commands
+        registerCommandsFromInstance(Wonderland.getPlugin())
+
+        Wonderland.getPlugin().logger.log(Level.INFO, "Registered ${commands.size} commands.")
+    }
+
+
+
+    private fun registerCommandsFromInstance(instance: Any) {
+        val methods = instance.javaClass.declaredMethods
         for (method in methods) {
             if (!method.isAnnotationPresent(CommandConsole::class.java) &&
                 !method.isAnnotationPresent(CommandPlayer::class.java) &&
-                !method.isAnnotationPresent(CommandAll::class.java)
-            ) {
-                continue
-            }
+                !method.isAnnotationPresent(CommandAll::class.java)) continue
 
             val commandName = method.name.lowercase(Locale.getDefault())
             if (commands.containsKey(commandName)) {
                 Wonderland.getPlugin().logger.log(Level.SEVERE, "Warning: Duplicate command '$commandName'. Skipping...")
                 continue
             }
-            commands[commandName] = method
+            commands[commandName] = Pair(method, instance)
         }
-
-        Wonderland.getPlugin().logger.log(Level.INFO, "Registered ${commands.size} commands.")
-
     }
 
 
-
     fun executeCommand(sender: CommandSender, label: String, args: Array<String>): Boolean {
-        val method = commands[label.lowercase(Locale.getDefault())] ?: return false
+        val (method, instance) = commands[label.lowercase(Locale.getDefault())] ?: return false
 
         val isConsoleCommand = method.isAnnotationPresent(CommandConsole::class.java)
         val isPlayerCommand = method.isAnnotationPresent(CommandPlayer::class.java)
@@ -133,9 +144,16 @@ class CommandManager {
 
         // Execute the command
         try {
-            method.invoke(Wonderland.getPlugin(), sender, args)
-        } catch (e: Exception) {
-            Wonderland.getPlugin().logger.log(Level.SEVERE, "Error executing command '$label': ${e.message}")
+            method.invoke(instance, sender, args)
+        } catch (e: InvocationTargetException) {
+            // If the method throws an exception, it's wrapped in InvocationTargetException
+            if (e.targetException != null) {
+                // Log the actual cause of the method exception
+                Wonderland.getPlugin().logger.log(Level.SEVERE, "Error executing command '$label': ${e.targetException.message}")
+            } else {
+                // This might be unnecessary if you're sure the command executed successfully
+                Wonderland.getPlugin().logger.log(Level.SEVERE, "Error executing command '$label': null")
+            }
         }
 
         return true
