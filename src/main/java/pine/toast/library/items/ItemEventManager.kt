@@ -1,4 +1,4 @@
-package pine.toast.library.events.items
+package pine.toast.library.items
 
 import org.bukkit.Material
 import org.bukkit.event.Event
@@ -8,8 +8,8 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataContainer
 import pine.toast.library.Wonderland
 import pine.toast.library.WonderlandKeys
-import pine.toast.library.events.made.PlayerLeftClickEvent
-import pine.toast.library.events.made.PlayerRightClickEvent
+import pine.toast.library.events.PlayerLeftClickEvent
+import pine.toast.library.events.PlayerRightClickEvent
 
 object ItemEventManager : Listener {
 

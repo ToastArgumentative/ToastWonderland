@@ -1,4 +1,4 @@
-package pine.toast.library.events.made
+package pine.toast.library.events
 
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable

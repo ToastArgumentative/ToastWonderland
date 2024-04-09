@@ -1,4 +1,4 @@
-package pine.toast.library.events.items
+package pine.toast.library.items
 
 import net.kyori.adventure.text.Component
 import org.bukkit.Material

@@ -25,7 +25,6 @@ class CommandManager {
         instances.forEach { instance ->
             registerCommandsFromInstance(instance)
         }
-        // Optionally, include the main plugin instance if it also contains commands
         registerCommandsFromInstance(Wonderland.getPlugin())
 
         Wonderland.getPlugin().logger.log(Level.INFO, "Registered ${commands.size} commands.")

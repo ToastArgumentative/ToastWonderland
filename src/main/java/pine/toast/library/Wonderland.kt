@@ -4,8 +4,9 @@ import org.bukkit.plugin.Plugin
 import pine.toast.library.adapters.WonderlandAdapters
 import pine.toast.library.commands.CommandManager
 import pine.toast.library.enchants.EnchantmentManager
-import pine.toast.library.events.items.ItemEventManager
-import pine.toast.library.events.made.CustomEventListeners
+import pine.toast.library.entities.EntityManager
+import pine.toast.library.items.ItemEventManager
+import pine.toast.library.events.CustomEventListeners
 
 object Wonderland {
 
@@ -19,6 +20,7 @@ object Wonderland {
         plugin.server.pluginManager.registerEvents(CustomEventListeners(), plugin)
         plugin.server.pluginManager.registerEvents(ItemEventManager, plugin)
         plugin.server.pluginManager.registerEvents(EnchantmentManager, plugin)
+        plugin.server.pluginManager.registerEvents(EntityManager, plugin)
 
 
     }

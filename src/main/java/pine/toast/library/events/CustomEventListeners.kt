@@ -1,4 +1,4 @@
-package pine.toast.library.events.made
+package pine.toast.library.events
 
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -6,7 +6,6 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import pine.toast.library.Wonderland
-import java.util.logging.Level
 
 class CustomEventListeners : Listener {
 

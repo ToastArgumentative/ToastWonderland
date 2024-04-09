@@ -2,7 +2,7 @@ package pine.toast.library.adapters
 
 import org.bukkit.persistence.PersistentDataAdapterContext
 import org.bukkit.persistence.PersistentDataType
-import pine.toast.library.events.items.ItemHandler
+import pine.toast.library.items.ItemHandler
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.ObjectInputStream

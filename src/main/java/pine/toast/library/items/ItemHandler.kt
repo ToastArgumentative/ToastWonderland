@@ -1,7 +1,7 @@
-package pine.toast.library.events.items
+package pine.toast.library.items
 
-import pine.toast.library.events.made.PlayerLeftClickEvent
-import pine.toast.library.events.made.PlayerRightClickEvent
+import pine.toast.library.events.PlayerLeftClickEvent
+import pine.toast.library.events.PlayerRightClickEvent
 import java.io.Serializable
 
 interface ItemHandler : Serializable {
