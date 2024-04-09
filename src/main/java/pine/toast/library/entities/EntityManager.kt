@@ -71,19 +71,22 @@ object EntityManager : Listener {
     @EventHandler(priority = EventPriority.HIGH)
     private fun onEntityTakesDamage(event: EntityDamageByEntityEvent) {
         val entity = event.entity
-        val target = event.damager
-
         val entityStorage = entity.persistentDataContainer
-        val targetStorage = target.persistentDataContainer
-
         val entityKey = entityStorage.get(WonderlandKeys.ENTITY_HANDLER, PersistentDataType.STRING) ?: return
         val entityHandler = getHandler(entityKey) ?: throw IllegalArgumentException("No handler found for key $entityKey")
 
+        entityHandler.onTakeDamage(entity, event.cause, event.damager, event.damage)
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    private fun onEntityDamage(event: EntityDamageByEntityEvent) {
+        val target = event.damager
+        val targetStorage = target.persistentDataContainer
+
         val targetKey = targetStorage.get(WonderlandKeys.ENTITY_HANDLER, PersistentDataType.STRING) ?: return
         val targetHandler = getHandler(targetKey) ?: throw IllegalArgumentException("No handler found for key $targetKey")
+        targetHandler.onDealDamage(target, event.entity, event.damage)
 
-        entityHandler.onTakeDamage(entity, event.cause, target, event.finalDamage)
-        targetHandler.onDealDamage(target, entity, event.finalDamage)
     }
 
 
