@@ -1,8 +1,0 @@
-name: ToastWonderland
-version: '${project.version}'
-main: pine.toast.plugin.ToastWonderland
-api-version: '1.20'
-
-commands:
-  test:
-    description: 'Test command'
