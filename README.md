@@ -19,7 +19,7 @@ Dependency:
 <dependency>
     <groupId>com.github.ToastArgumentative</groupId>
     <artifactId>ToastWonderland</artifactId>
-    <version>ALPHA-1.0.0</version>
+    <version>ALPHA-1.0.7</version>
     <scope>compile</scope>
 </dependency>
 ```
