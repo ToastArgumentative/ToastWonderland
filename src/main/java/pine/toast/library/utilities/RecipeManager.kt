@@ -16,6 +16,7 @@ object RecipeManager {
 
     private val recipes: MutableMap<Recipe, NamespacedKey> = mutableMapOf()
 
+
     init {
         recipes.forEach { (recipe, key) ->
              if (Wonderland.getPlugin().server.addRecipe(recipe)) {

@@ -32,7 +32,7 @@ object EnchantmentManager : Listener {
     }
 
 
-    fun createEnchantBook(enchantName: String): ItemStack {
+    fun createEnchantBook(enchantName: String, level: Int): ItemStack {
         val enchantName = enchantName.replace(" ", ".")
         val enchantment = allEnchantments[enchantName] ?: throw IllegalArgumentException("$enchantName is not an enchantment")
 
@@ -41,12 +41,12 @@ object EnchantmentManager : Listener {
         bookMeta.displayName(Component.text(enchantment.name))
 
         bookMeta.persistentDataContainer.set(WonderlandKeys.ENCHANTMENT_STORAGE, PersistentDataType.STRING, enchantName)
-        bookMeta.persistentDataContainer.set(WonderlandKeys.ENCHANT_LEVEL, PersistentDataType.INTEGER, enchantment.level)
+        bookMeta.persistentDataContainer.set(WonderlandKeys.ENCHANT_LEVEL, PersistentDataType.INTEGER, level)
         bookMeta.persistentDataContainer.set(WonderlandKeys.ENCHANTMENT_BOOK, PersistentDataType.BOOLEAN, true)
 
         val lore = mutableListOf<Component>()
 
-        lore.add(Component.text(WonderlandColors.YELLOW + "Enchantment Level: " + enchantment.level))
+        lore.add(Component.text(WonderlandColors.YELLOW + "Enchantment Level: " + level))
 
         val enchTargets = enchantment.targets
         val enchTargetNames = mutableListOf<String>()
@@ -236,26 +236,26 @@ object EnchantmentManager : Listener {
         if (item.type == Material.AIR) return   // Return if the item slot is empty.
 
         val bookMeta = book.itemMeta ?: return
+        event.isCancelled = true
+
         val bookStorage = bookMeta.persistentDataContainer
         val enchantName = bookStorage.get(WonderlandKeys.ENCHANTMENT_STORAGE, PersistentDataType.STRING) ?: return  // Return if there's no enchantment name stored.
+        val bookEnchantLevel = bookStorage.get(WonderlandKeys.ENCHANT_LEVEL, PersistentDataType.INTEGER) ?: 1
 
         // Check if the enchantment exists in the map before attempting to apply it.
         val enchantment = allEnchantments[enchantName] ?: return  // Return if the enchantment does not exist.
 
-        event.isCancelled = true
-
-        // This includes any necessary checks for item compatibility.
-        enchantment.applyEnchant(item)
+        // Apply enchantment or increase level if already present.
+        val existingLevel = enchantment.getLevelFromItem(item.itemMeta)
+        if (existingLevel > 0) { // Enchantment already present, increase level.
+            enchantment.addLevelToItem(item, bookEnchantLevel)
+        } else { // Enchantment not present, apply.
+            enchantment.applyEnchant(item, bookEnchantLevel)
+        }
 
         book.amount -= 1
-
-        // Update the player's inventory to reflect changes.
         event.whoClicked.inventory.setItem(event.slot, item)  // Ensure the enchanted item is updated in the inventory.
     }
-
-
-
-
 
     @EventHandler(priority = EventPriority.HIGHEST)
     fun onEntityDamage(event: EntityDamageEvent) {
@@ -462,6 +462,3 @@ object EnchantmentManager : Listener {
 
 
 }
-
-
-
