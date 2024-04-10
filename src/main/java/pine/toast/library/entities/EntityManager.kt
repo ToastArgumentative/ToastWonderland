@@ -43,8 +43,6 @@ object EntityManager : Listener {
         return entityHandlers[key]
     }
 
-
-
     @EventHandler(priority = EventPriority.HIGH)
     private fun onEntitySpawn(event: EntitySpawnEvent) {
         val entity = event.entity

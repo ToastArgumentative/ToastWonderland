@@ -1,6 +1,8 @@
 package pine.toast.library.commands
 
+import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
+import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
@@ -16,6 +18,20 @@ class CommandManager {
 
     private val commands: MutableMap<String, Pair<Method, Any>> = mutableMapOf()
 
+    private fun createCommandAndAddToMap() {
+        val commandMap = Bukkit.getCommandMap()
+        for ((commandName, commandData) in commands) {
+
+            val officialCommand: Command = object : Command(commandName) {
+                override fun execute(sender: CommandSender, commandLabel: String, args: Array<String>): Boolean {
+                    return executeCommand(sender, commandLabel, args)
+                }
+            }
+            // Register your command
+            commandMap.register(Wonderland.getPlugin().name, officialCommand)
+        }
+    }
+
 
     fun registerCommands(vararg instances: Any) {
         // Clear previous commands
@@ -28,8 +44,8 @@ class CommandManager {
         registerCommandsFromInstance(Wonderland.getPlugin())
 
         Wonderland.getPlugin().logger.log(Level.INFO, "Registered ${commands.size} commands.")
+        createCommandAndAddToMap()
     }
-
 
 
     private fun registerCommandsFromInstance(instance: Any) {
@@ -44,7 +60,10 @@ class CommandManager {
                 Wonderland.getPlugin().logger.log(Level.SEVERE, "Warning: Duplicate command '$commandName'. Skipping...")
                 continue
             }
+
+
             commands[commandName] = Pair(method, instance)
+
         }
     }
 
