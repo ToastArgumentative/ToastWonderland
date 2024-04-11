@@ -120,7 +120,7 @@ abstract class WLEnchant {
 
             } else {
 
-                val enchantsStorage = storage.get(WonderlandKeys.ENCHANTMENT_STORAGE, Wonderland.getAdapters().enchantmentStorageAdapter)!!
+
 
 
             }

@@ -17,15 +17,14 @@ object RecipeManager {
     private val recipes: MutableMap<Recipe, NamespacedKey> = mutableMapOf()
 
 
-    init {
+    fun registerRecipes() {
         recipes.forEach { (recipe, key) ->
-             if (Wonderland.getPlugin().server.addRecipe(recipe)) {
-                 Wonderland.getPlugin().logger.log(Level.INFO, "Added recipe: $key")
-             } else {
-                 Wonderland.getPlugin().logger.log(Level.WARNING, "Failed to add recipe: $key")
-             }
+            if (Wonderland.getPlugin().server.addRecipe(recipe)) {
+                Wonderland.getPlugin().logger.log(Level.INFO, "Added recipe: $key")
+            } else {
+                Wonderland.getPlugin().logger.log(Level.WARNING, "Failed to add recipe: $key")
+            }
         }
-
     }
 
     fun getRecipes(): Map<Recipe, NamespacedKey> {
