@@ -95,18 +95,9 @@ class CommandManager {
         if (isAllCommand && (sender is Player || sender is ConsoleCommandSender)) {
             val annotation = method.getAnnotation(CommandAll::class.java) ?: return false
             val permission = annotation.permission
-            val allOperators = annotation.allOperators
             val cooldownSeconds = annotation.cooldown
 
             if (permission.isNotEmpty() && !sender.hasPermission(permission)) {
-                Wonderland.getPlugin().logger.log(
-                    Level.SEVERE,
-                    "${sender.name} has tried to execute $label but does not have permission to do so."
-                )
-                return true
-            }
-
-            if (allOperators && !sender.isOp) {
                 Wonderland.getPlugin().logger.log(
                     Level.SEVERE,
                     "${sender.name} has tried to execute $label but does not have permission to do so."
@@ -129,18 +120,9 @@ class CommandManager {
         if (isPlayerCommand && sender is Player) {
             val annotation = method.getAnnotation(CommandPlayer::class.java)
             val permission = annotation.permission
-            val allOperators = annotation.allOperators
             val cooldownSeconds = annotation.cooldown
 
             if (permission.isNotEmpty() && !sender.hasPermission(permission)) {
-                Wonderland.getPlugin().logger.log(
-                    Level.SEVERE,
-                    "${sender.name} has tried to execute $label but does not have permission to do so."
-                )
-                return true
-            }
-
-            if (allOperators && !sender.isOp) {
                 Wonderland.getPlugin().logger.log(
                     Level.SEVERE,
                     "${sender.name} has tried to execute $label but does not have permission to do so."

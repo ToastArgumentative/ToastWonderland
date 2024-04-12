@@ -21,6 +21,7 @@ import org.bukkit.inventory.meta.ItemMeta
  * @param handler Class<out ItemHandler> The event handlers for the item, this can be null
  * Once the item blueprint is populated you can use ItemBlueprint.build() to build the item
  */
+@Deprecated("Use the WLItem class instead")
 data class ItemBlueprint(
     val itemName: String?,
     val itemLore: MutableList<String>?,

@@ -11,6 +11,7 @@ import pine.toast.library.WonderlandKeys
 import pine.toast.library.events.PlayerLeftClickEvent
 import pine.toast.library.events.PlayerRightClickEvent
 
+@Deprecated("Use ItemManager instead")
 object ItemEventManager : Listener {
 
 
