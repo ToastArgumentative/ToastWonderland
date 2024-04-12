@@ -4,6 +4,7 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.attribute.Attribute
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemStack
 import pine.toast.library.Wonderland
@@ -18,7 +19,7 @@ object ItemManager : Listener {
 
     private val handlerKey = NamespacedKey(Wonderland.getPlugin(), "item_handler")
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     private fun onPlayerLeftClick(event: PlayerLeftClickEvent) {
         val item = event.getPlayer().inventory.itemInMainHand
         if (item.type == Material.AIR) return
@@ -29,7 +30,7 @@ object ItemManager : Listener {
 
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     private fun onPlayerRightClick(event: PlayerRightClickEvent) {
         val item = event.getPlayer().inventory.itemInMainHand
         if (item.type == Material.AIR) return
@@ -72,6 +73,7 @@ object ItemManager : Listener {
                 it.addEnchant(enchantment.key, enchantment.value, true)
             }
 
+            it.attributeModifiers?.clear()
             for (attr in item.getAttributes()) {
                 val attribute = attr.name
                 it.addAttributeModifier(Attribute.valueOf(attribute), attr)
