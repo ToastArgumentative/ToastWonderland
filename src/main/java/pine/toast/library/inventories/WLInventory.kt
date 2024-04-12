@@ -17,7 +17,7 @@ abstract class WLInventory(
     private val identifier: String
 ) : InventoryHolder, Listener {
 
-    private val inventory: Inventory = Wonderland.getPlugin().server.createInventory(this, 6*rows, name)
+    private val inventory: Inventory = Wonderland.getPlugin().server.createInventory(this, 9*rows, name)
 
 
     abstract fun populateInventory(): Map<Int, ItemStack>
