@@ -1,5 +1,6 @@
 package pine.toast.library.utilities
 
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
@@ -19,10 +20,15 @@ object RecipeManager {
 
     fun registerRecipes() {
         recipes.forEach { (recipe, key) ->
-            if (Wonderland.getPlugin().server.addRecipe(recipe)) {
-                Wonderland.getPlugin().logger.log(Level.INFO, "Added recipe: $key")
+            val checkRecipe: Recipe? = Bukkit.getRecipe(key)
+            if (checkRecipe == null) {
+                if (Wonderland.getPlugin().server.addRecipe(recipe)) {
+                    Wonderland.getPlugin().logger.log(Level.INFO, "Added recipe: $key")
+                } else {
+                    Wonderland.getPlugin().logger.log(Level.WARNING, "Failed to add recipe: $key")
+                }
             } else {
-                Wonderland.getPlugin().logger.log(Level.WARNING, "Failed to add recipe: $key")
+                Wonderland.getPlugin().logger.log(Level.WARNING, "$key already exists skipping...")
             }
         }
     }
