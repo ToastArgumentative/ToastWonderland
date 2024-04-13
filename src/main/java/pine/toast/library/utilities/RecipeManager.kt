@@ -1,6 +1,5 @@
 package pine.toast.library.utilities
 
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
@@ -17,21 +16,6 @@ object RecipeManager {
 
     private val recipes: MutableMap<Recipe, NamespacedKey> = mutableMapOf()
 
-
-    fun registerRecipes() {
-        recipes.forEach { (recipe, key) ->
-            val checkRecipe: Recipe? = Bukkit.getRecipe(key)
-            if (checkRecipe == null) {
-                if (Wonderland.getPlugin().server.addRecipe(recipe)) {
-                    Wonderland.getPlugin().logger.log(Level.INFO, "Added recipe: $key")
-                } else {
-                    Wonderland.getPlugin().logger.log(Level.WARNING, "Failed to add recipe: $key")
-                }
-            } else {
-                Wonderland.getPlugin().logger.log(Level.WARNING, "$key already exists skipping...")
-            }
-        }
-    }
 
     fun unregisterRecipes() {
         recipes.forEach { (_, key) ->
@@ -75,7 +59,9 @@ object RecipeManager {
 
 
         recipes[shapedRecipe] = key
-        Wonderland.getPlugin().server.addRecipe(shapedRecipe)
+        if (Wonderland.getPlugin().server.addRecipe(shapedRecipe))
+        Wonderland.getPlugin().logger.log(Level.INFO, "$key Recipe has been added")
+        else Wonderland.getPlugin().logger.log(Level.SEVERE, "$key Recipe failed to add")
         return Pair(shapedRecipe, key)
     }
 
