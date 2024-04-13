@@ -27,6 +27,12 @@ object RecipeManager {
         }
     }
 
+    fun unregisterRecipes() {
+        recipes.forEach { (_, key) ->
+            Wonderland.getPlugin().server.removeRecipe(key)
+        }
+    }
+
     fun getRecipes(): Map<Recipe, NamespacedKey> {
         return recipes
     }

@@ -9,6 +9,7 @@ import pine.toast.library.events.CustomEventListeners
 import pine.toast.library.inventories.InvManager
 import pine.toast.library.items.ItemEventManager
 import pine.toast.library.items.ItemManager
+import pine.toast.library.utilities.RecipeManager
 
 object Wonderland {
 
@@ -27,7 +28,10 @@ object Wonderland {
         plugin.server.pluginManager.registerEvents(ItemManager, plugin)
         plugin.server.pluginManager.registerEvents(invManager, plugin)
 
+    }
 
+    fun shutDown() {
+        RecipeManager.unregisterRecipes()
     }
 
     fun getPlugin(): Plugin {
