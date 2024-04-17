@@ -142,7 +142,7 @@ class CommandManager {
 
         // Execute the command
         try {
-            method.invoke(instance, sender, args)
+            method.invoke(sender, args)
         } catch (e: InvocationTargetException) {
             // If the method throws an exception, it's wrapped in InvocationTargetException
             if (e.targetException != null) {
