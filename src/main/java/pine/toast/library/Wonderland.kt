@@ -32,13 +32,16 @@ object Wonderland {
         plugin.server.pluginManager.registerEvents(EntityManager, plugin)
         plugin.server.pluginManager.registerEvents(ItemManager, plugin)
         plugin.server.pluginManager.registerEvents(invManager, plugin)
-        commandManager.registerCommands(this)
 
     }
 
     @CommandAll
-    fun wlVersion(sender: CommandSender, args: List<String>) {
+    private fun wlVersion(sender: CommandSender, args: List<String>) {
         sender.sendMessage(Component.text("${WonderlandColors.AQUA.code}Wonderland: $VERSION"))
+    }
+
+    fun wlVersion(): String {
+        return VERSION
     }
 
     fun shutDown() {

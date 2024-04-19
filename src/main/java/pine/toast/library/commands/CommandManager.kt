@@ -42,6 +42,7 @@ class CommandManager {
         }
         // Optionally, include the main plugin instance if it also contains commands
         registerCommandsFromInstance(Wonderland.getPlugin())
+        registerCommandsFromInstance(Wonderland)
         createCommandAndAddToMap()
 
         Wonderland.getPlugin().logger.log(Level.INFO, "Registered ${commands.size} commands.")
@@ -143,12 +144,19 @@ class CommandManager {
         try {
             method.invoke(instance, sender, args)
         } catch (e: IllegalAccessException) {
-            Wonderland.getPlugin().logger.log(Level.SEVERE, "Access denied by '$label`: ${e.message}")
+            Wonderland.getPlugin().logger.log(Level.SEVERE, "Access denied for command '$label`: ${e.message}")
         } catch (e: IllegalArgumentException) {
             Wonderland.getPlugin().logger.log(Level.SEVERE, "Invalid arguments for command '$label': ${e.message}")
         } catch (e: InvocationTargetException) {
-            Wonderland.getPlugin().logger.log(Level.SEVERE, "Error executing command ( Invoking Failed ) '$label': ${e.targetException.message}")
+            if (e.targetException is NullPointerException) {
+                Wonderland.getPlugin().logger.log(Level.SEVERE, "Null pointer exception in command '$label': ${e.targetException.message}")
+            } else {
+                Wonderland.getPlugin().logger.log(Level.SEVERE, "Error executing command '$label': ${e.targetException.message}")
+            }
+        } catch (e: Exception) {
+            Wonderland.getPlugin().logger.log(Level.SEVERE, "Unexpected error executing command '$label': ${e.message}")
         }
+
 
 
         return true
