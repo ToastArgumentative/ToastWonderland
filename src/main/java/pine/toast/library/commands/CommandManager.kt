@@ -140,19 +140,16 @@ class CommandManager {
             }
         }
 
-        // Execute the command
         try {
-            method.invoke(sender, args)
+            method.invoke(instance, sender, args)
+        } catch (e: IllegalAccessException) {
+            Wonderland.getPlugin().logger.log(Level.SEVERE, "Access denied by '$label`: ${e.message}")
+        } catch (e: IllegalArgumentException) {
+            Wonderland.getPlugin().logger.log(Level.SEVERE, "Invalid arguments for command '$label': ${e.message}")
         } catch (e: InvocationTargetException) {
-            // If the method throws an exception, it's wrapped in InvocationTargetException
-            if (e.targetException != null) {
-                // Log the actual cause of the method exception
-                Wonderland.getPlugin().logger.log(Level.SEVERE, "Error executing command '$label': ${e.targetException.message}")
-            } else {
-                // This might be unnecessary if you're sure the command executed successfully
-                Wonderland.getPlugin().logger.log(Level.SEVERE, "Error executing command '$label': null")
-            }
+            Wonderland.getPlugin().logger.log(Level.SEVERE, "Error executing command '$label': ${e.message}")
         }
+
 
         return true
     }
