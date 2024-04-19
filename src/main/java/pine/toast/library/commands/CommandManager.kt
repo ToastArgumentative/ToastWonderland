@@ -147,7 +147,7 @@ class CommandManager {
         } catch (e: IllegalArgumentException) {
             Wonderland.getPlugin().logger.log(Level.SEVERE, "Invalid arguments for command '$label': ${e.message}")
         } catch (e: InvocationTargetException) {
-            Wonderland.getPlugin().logger.log(Level.SEVERE, "Error executing command '$label': ${e.message}")
+            Wonderland.getPlugin().logger.log(Level.SEVERE, "Error executing command ( Invoking Failed ) '$label': ${e.targetException.message}")
         }
 
 

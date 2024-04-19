@@ -1,7 +1,10 @@
 package pine.toast.library
 
+import net.kyori.adventure.text.Component
+import org.bukkit.command.CommandSender
 import org.bukkit.plugin.Plugin
 import pine.toast.library.adapters.WonderlandAdapters
+import pine.toast.library.commands.CommandAll
 import pine.toast.library.commands.CommandManager
 import pine.toast.library.enchants.EnchantmentManager
 import pine.toast.library.entities.EntityManager
@@ -10,10 +13,12 @@ import pine.toast.library.inventories.InvManager
 import pine.toast.library.items.ItemEventManager
 import pine.toast.library.items.ItemManager
 import pine.toast.library.utilities.RecipeManager
+import pine.toast.library.utilities.WonderlandColors
 
 object Wonderland {
 
     private lateinit var plugin: Plugin
+    private const val VERSION = "1.0.9-preview11"
     private val adapters = WonderlandAdapters()
     private val commandManager = CommandManager()
     private val invManager = InvManager()
@@ -27,7 +32,13 @@ object Wonderland {
         plugin.server.pluginManager.registerEvents(EntityManager, plugin)
         plugin.server.pluginManager.registerEvents(ItemManager, plugin)
         plugin.server.pluginManager.registerEvents(invManager, plugin)
+        commandManager.registerCommands(this)
 
+    }
+
+    @CommandAll
+    fun wlVersion(sender: CommandSender, args: List<String>) {
+        sender.sendMessage(Component.text("${WonderlandColors.AQUA.code}Wonderland: $VERSION"))
     }
 
     fun shutDown() {
