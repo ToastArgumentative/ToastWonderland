@@ -2,10 +2,12 @@ package pine.toast.library
 
 import net.kyori.adventure.text.Component
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import pine.toast.library.adapters.WonderlandAdapters
-import pine.toast.library.commands.CommandAll
 import pine.toast.library.commands.CommandManager
+import pine.toast.library.commands.CommandType
+import pine.toast.library.commands.WLCommand
 import pine.toast.library.enchants.EnchantmentManager
 import pine.toast.library.entities.EntityManager
 import pine.toast.library.events.CustomEventListeners
@@ -14,6 +16,7 @@ import pine.toast.library.items.ItemEventManager
 import pine.toast.library.items.ItemManager
 import pine.toast.library.utilities.RecipeManager
 import pine.toast.library.utilities.WonderlandColors
+import java.util.logging.Level
 
 object Wonderland {
 
@@ -35,9 +38,11 @@ object Wonderland {
 
     }
 
-    @CommandAll
+    @WLCommand(target = CommandType.ALL, cooldown = 3)
     private fun wlVersion(sender: CommandSender, args: List<String>) {
-        sender.sendMessage(Component.text("${WonderlandColors.AQUA.code}Wonderland: $VERSION"))
+        if (sender is Player) {
+            sender.sendMessage(Component.text("${WonderlandColors.AQUA.code}Wonderland: $VERSION"))
+        } else getPlugin().logger.log(Level.INFO, "${WonderlandColors.AQUA.code}Wonderland: $VERSION")
     }
 
     fun wlVersion(): String {

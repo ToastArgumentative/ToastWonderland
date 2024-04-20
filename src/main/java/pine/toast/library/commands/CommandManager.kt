@@ -1,10 +1,10 @@
 package pine.toast.library.commands
 
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
-import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
 import pine.toast.library.Wonderland
 import pine.toast.library.utilities.CooldownManager
@@ -53,9 +53,7 @@ class CommandManager {
     private fun registerCommandsFromInstance(instance: Any) {
         val methods = instance.javaClass.declaredMethods
         for (method in methods) {
-            if (!method.isAnnotationPresent(CommandConsole::class.java) &&
-                !method.isAnnotationPresent(CommandPlayer::class.java) &&
-                !method.isAnnotationPresent(CommandAll::class.java)) continue
+            if (!method.isAnnotationPresent(WLCommand::class.java)) continue
 
             val commandName = method.name.lowercase(Locale.getDefault())
             if (commands.containsKey(commandName)) {
@@ -66,6 +64,76 @@ class CommandManager {
         }
     }
 
+
+
+    fun executeCommand(sender: CommandSender, label: String, args: Array<String>): Boolean {
+        val (method, instance) = commands[label.lowercase(Locale.getDefault())] ?: return false
+        val isCommand = method.isAnnotationPresent(WLCommand::class.java)
+        if (!isCommand) return true
+
+        val commandAnnotation: WLCommand = method.getAnnotation(WLCommand::class.java)
+        val commandType: CommandType = commandAnnotation.target
+        val permission: String = commandAnnotation.permission
+        val cooldown: Int = commandAnnotation.cooldown
+
+        if (commandType == CommandType.PLAYER || commandType == CommandType.ALL) {
+
+            if (sender is Player) {
+
+                if (!sender.hasPermission(permission)) {
+                    sender.sendMessage(Component.text("${WonderlandColors.RED.code}You do not have permission to execute this command."))
+                    return true
+                }
+
+                val labelKey = NamespacedKey(Wonderland.getPlugin(), label)
+
+                if (CooldownManager.isPlayerOnCooldown(sender, labelKey)) {
+                    val remainingCooldown: Long = CooldownManager.getPlayerRemainingCooldown(sender, labelKey)
+                    sender.sendMessage(Component.text("${WonderlandColors.RED.code}You are on cooldown. Please wait ${remainingCooldown / 1000} seconds."))
+                    return true
+                }
+
+                CooldownManager.applyPlayerCooldown(sender, labelKey, cooldown)
+
+            }
+
+
+        }
+
+        else if (commandType == CommandType.CONSOLE) {
+
+            if (sender is Player) {
+                sender.sendMessage(Component.text("${WonderlandColors.RED.code}You must be a player to execute this command."))
+                return true
+            }
+
+        }
+
+        else {
+            sender.sendMessage(Component.text("${WonderlandColors.RED.code}This command can only be executed by players or the console."))
+            return true
+        }
+
+        try {
+            method.invoke(instance, sender, args)
+        } catch (e: IllegalAccessException) {
+            Wonderland.getPlugin().logger.log(Level.SEVERE, "Access denied for command '$label`: ${e.message}")
+        } catch (e: IllegalArgumentException) {
+            Wonderland.getPlugin().logger.log(Level.SEVERE, "Invalid arguments for command '$label': ${e.message}")
+        } catch (e: InvocationTargetException) {
+            if (e.targetException is NullPointerException) {
+                Wonderland.getPlugin().logger.log(Level.SEVERE, "Null pointer exception in command '$label': ${e.targetException.message}")
+            } else {
+                Wonderland.getPlugin().logger.log(Level.SEVERE, "Error executing command '$label': ${e.targetException.message}")
+            }
+        } catch (e: Exception) {
+            Wonderland.getPlugin().logger.log(Level.SEVERE, "Unexpected error executing command '$label': ${e.message}")
+        }
+
+        return true
+    }
+
+    /*
 
     fun executeCommand(sender: CommandSender, label: String, args: Array<String>): Boolean {
         val (method, instance) = commands[label.lowercase(Locale.getDefault())] ?: return false
@@ -161,6 +229,8 @@ class CommandManager {
 
         return true
     }
+
+*/
 
 
 }
