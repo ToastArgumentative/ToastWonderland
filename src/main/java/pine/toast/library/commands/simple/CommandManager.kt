@@ -1,4 +1,4 @@
-package pine.toast.library.commands
+package pine.toast.library.commands.simple
 
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit

@@ -11,13 +11,14 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import pine.toast.library.Wonderland
 import pine.toast.library.WonderlandKeys
+import pine.toast.library.utilities.ItemTarget
 import pine.toast.library.utilities.WonderlandColors
 
 abstract class WLEnchant {
 
 
     abstract val name: String
-    abstract val targets: List<WLEnchantmentTarget>
+    abstract val targets: List<ItemTarget>
 
 
     private fun checkApplicableStatus(item: ItemStack): Boolean {

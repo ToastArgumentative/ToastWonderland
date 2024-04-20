@@ -1,4 +1,4 @@
-package pine.toast.library.commands
+package pine.toast.library.commands.simple
 
 enum class CommandType {
     PLAYER,

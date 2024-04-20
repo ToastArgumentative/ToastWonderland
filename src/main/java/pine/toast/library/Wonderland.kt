@@ -5,9 +5,9 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import pine.toast.library.adapters.WonderlandAdapters
-import pine.toast.library.commands.CommandManager
-import pine.toast.library.commands.CommandType
-import pine.toast.library.commands.WLCommand
+import pine.toast.library.commands.simple.CommandManager
+import pine.toast.library.commands.simple.CommandType
+import pine.toast.library.commands.simple.WLCommand
 import pine.toast.library.enchants.EnchantmentManager
 import pine.toast.library.entities.EntityManager
 import pine.toast.library.events.CustomEventListeners
@@ -21,7 +21,7 @@ import java.util.logging.Level
 object Wonderland {
 
     private lateinit var plugin: Plugin
-    private const val VERSION = "1.0.9-preview11"
+    private const val VERSION = "1.0.9-preview13"
     private val adapters = WonderlandAdapters()
     private val commandManager = CommandManager()
     private val invManager = InvManager()

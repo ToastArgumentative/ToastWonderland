@@ -1,10 +1,10 @@
-package pine.toast.library.enchants
+package pine.toast.library.utilities
 
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
 @Suppress("unused")
-enum class WLEnchantmentTarget {
+enum class ItemTarget {
 
     ARMOR {
         override fun includes(item: Material): Boolean {
